@@ -26,6 +26,7 @@ public class Task {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+
     @Schema(name = "Descrição da tarefa deve possuir pelo menos 10 caracteres")
     @Size(min = 10, message = "Descrição da tarefa deve possuir pelo menos 10 caracteres")
     private String description;
@@ -56,7 +57,7 @@ public class Task {
     public void setData(LocalDate data) {
         LocalDate dataAtual = LocalDate.now();
 
-        // Comparando a data fornecida com a data atual
+
         if (data.isBefore(dataAtual) || data.isEqual(dataAtual)) {
             this.data = data;
         } else {
