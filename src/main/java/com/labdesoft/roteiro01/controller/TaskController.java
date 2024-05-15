@@ -1,6 +1,5 @@
 package com.labdesoft.roteiro01.controller;
 
-
 import com.labdesoft.roteiro01.entity.Task;
 import com.labdesoft.roteiro01.service.TaskService;
 import io.swagger.v3.oas.annotations.Operation;
@@ -14,7 +13,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/tasks")
+@RequestMapping("/task") 
 public class TaskController {
 
     @Autowired
