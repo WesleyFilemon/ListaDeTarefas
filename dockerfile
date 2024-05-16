@@ -4,8 +4,8 @@ RUN apt-get update
 RUN apt-get install openjdk-21-jdk -y 
 COPY . .
 
-RUN apt-get intall maven -y
-RUN mvn clean intall
+RUN apt-get install maven -y
+RUN mvn clean install
 
 FROM openjdk:21-jdk-slim
 
