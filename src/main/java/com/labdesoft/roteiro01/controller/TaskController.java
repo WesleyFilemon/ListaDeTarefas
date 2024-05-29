@@ -8,12 +8,16 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
-@RequestMapping("/task") 
+@RequestMapping("/task")
+@Validated
 public class TaskController {
 
     @Autowired
@@ -32,21 +36,21 @@ public class TaskController {
     @GetMapping("/{id}")
     @Operation(summary = "Retorna uma tarefa específica pelo ID")
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
-        return taskService.getTaskById(id)
-                .map(task -> new ResponseEntity<>(task, HttpStatus.OK))
-                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+        Optional<Task> task = taskService.getTaskById(id);
+        return task.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                   .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
     @PostMapping
     @Operation(summary = "Cria uma nova tarefa")
-    public ResponseEntity<Task> createTask(@RequestBody Task task) {
+    public ResponseEntity<Task> createTask(@Valid @RequestBody Task task) {
         Task createdTask = taskService.createTask(task);
         return new ResponseEntity<>(createdTask, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     @Operation(summary = "Atualiza uma tarefa existente pelo ID")
-    public ResponseEntity<Task> updateTask(@PathVariable Long id, @RequestBody Task task) {
+    public ResponseEntity<Task> updateTask(@PathVariable Long id, @Valid @RequestBody Task task) {
         task.setId(id);
         Task updatedTask = taskService.updateTask(task);
         return new ResponseEntity<>(updatedTask, HttpStatus.OK);
@@ -55,7 +59,7 @@ public class TaskController {
     @DeleteMapping("/{id}")
     @Operation(summary = "Exclui uma tarefa existente pelo ID")
     public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
-        taskService.deleteTask(id);
-        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        boolean deleted = taskService.deleteTask(id);
+        return new ResponseEntity<>(deleted ? HttpStatus.NO_CONTENT : HttpStatus.NOT_FOUND);
     }
 }

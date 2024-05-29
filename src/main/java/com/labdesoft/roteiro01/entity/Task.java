@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Entity
 @Table(name = Task.TABLE_NAME)
@@ -27,19 +29,67 @@ public class Task {
     private String description;
 
     @Column(name = "completed", nullable = false)
-    private Boolean completed;
+    private Boolean completed = false;
 
-    @Column(name = "data", nullable = false)
-    private LocalDate data;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "task_type", nullable = false)
+    @NotNull
+    private TaskType taskType;
 
-    @Column(name = "prazo", nullable = false)
-    private int prazo;
+    @Column(name = "due_date")
+    private LocalDate dueDate; // For Date type tasks
 
-    @Column(name = "livre", nullable = false)
-    private Boolean livre;
+    @Column(name = "days_to_complete")
+    private Integer daysToComplete; // For Deadline type tasks
 
-    @Column(name = "nivel", length = 255, nullable = false)
-    @Size(min = 1, max = 255)
-    @NotBlank
-    private String nivel;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "priority", nullable = false)
+    @NotNull
+    private Priority priority;
+
+    @Transient
+    private String status;
+
+    @PostLoad
+    @PostPersist
+    @PostUpdate
+    public void computeStatus() {
+        if (completed) {
+            this.status = "Concluída";
+            return;
+        }
+        LocalDate now = LocalDate.now();
+        switch (taskType) {
+            case DATA:
+                if (dueDate != null) {
+                    if (dueDate.isAfter(now)) {
+                        this.status = "Prevista";
+                    } else {
+                        this.status = ChronoUnit.DAYS.between(dueDate, now) + " dias de atraso";
+                    }
+                }
+                break;
+            case PRAZO:
+                if (daysToComplete != null) {
+                    LocalDate expectedCompletionDate = now.minusDays(daysToComplete);
+                    if (expectedCompletionDate.isAfter(now)) {
+                        this.status = "Prevista";
+                    } else {
+                        this.status = ChronoUnit.DAYS.between(expectedCompletionDate, now) + " dias de atraso";
+                    }
+                }
+                break;
+            case LIVRE:
+                this.status = "Prevista";
+                break;
+        }
+    }
+
+    public enum TaskType {
+        DATA, PRAZO, LIVRE
+    }
+
+    public enum Priority {
+        ALTA, MEDIA, BAIXA
+    }
 }

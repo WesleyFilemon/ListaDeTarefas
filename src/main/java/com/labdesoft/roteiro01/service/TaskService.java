@@ -7,6 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.Optional;
 
 @Service
@@ -28,10 +29,12 @@ public class TaskService {
     }
 
     public Task createTask(Task task) {
+        validateTask(task);
         return taskRepository.save(task);
     }
 
     public Task updateTask(Task task) {
+        validateTask(task);
         return taskRepository.save(task);
     }
 
@@ -42,5 +45,24 @@ public class TaskService {
             return true;
         }
         return false;
+    }
+
+    private void validateTask(Task task) {
+        if (task.getTaskType() == Task.TaskType.DATA) {
+            if (task.getDueDate() == null) {
+                throw new IllegalArgumentException("Data prevista de execução deve ser fornecida para tarefas do tipo DATA.");
+            }
+            if (task.getDueDate().isBefore(LocalDate.now())) {
+                throw new IllegalArgumentException("Data prevista de execução deve ser igual ou superior a data atual.");
+            }
+        } else {
+            task.setDueDate(null); // Clear dueDate for non-DATA tasks
+        }
+        if (task.getTaskType() == Task.TaskType.PRAZO && task.getDaysToComplete() == null) {
+            throw new IllegalArgumentException("Prazo de conclusão deve ser fornecido para tarefas do tipo PRAZO.");
+        }
+        if (task.getPriority() == null) {
+            task.setPriority(Task.Priority.MEDIA); // Set default priority
+        }
     }
 }
