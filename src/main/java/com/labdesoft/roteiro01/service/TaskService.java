@@ -24,6 +24,14 @@ public class TaskService {
         return taskRepository.findAll(pageable);
     }
 
+    public Page<Task> listCompletedTasks(Pageable pageable) {
+        return taskRepository.findByCompletedTrue(pageable);
+    }
+
+    public Page<Task> listIncompleteTasks(Pageable pageable) {
+        return taskRepository.findByCompletedFalse(pageable);
+    }
+
     public Optional<Task> getTaskById(Long id) {
         return taskRepository.findById(id);
     }

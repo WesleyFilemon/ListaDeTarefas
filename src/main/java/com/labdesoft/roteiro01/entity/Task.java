@@ -37,10 +37,10 @@ public class Task {
     private TaskType taskType;
 
     @Column(name = "due_date")
-    private LocalDate dueDate; // For Date type tasks
+    private LocalDate dueDate; 
 
     @Column(name = "days_to_complete")
-    private Integer daysToComplete; // For Deadline type tasks
+    private Integer daysToComplete; 
 
     @Enumerated(EnumType.STRING)
     @Column(name = "priority", nullable = false)

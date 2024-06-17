@@ -33,6 +33,26 @@ public class TaskController {
         return new ResponseEntity<>(tasks.getContent(), HttpStatus.OK);
     }
 
+    @GetMapping("/completed")
+    @Operation(summary = "Lista todas as tarefas completas")
+    public ResponseEntity<List<Task>> listCompletedTasks(Pageable pageable) {
+        Page<Task> tasks = taskService.listCompletedTasks(pageable);
+        if (tasks.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(tasks.getContent(), HttpStatus.OK);
+    }
+
+    @GetMapping("/incomplete")
+    @Operation(summary = "Lista todas as tarefas incompletas")
+    public ResponseEntity<List<Task>> listIncompleteTasks(Pageable pageable) {
+        Page<Task> tasks = taskService.listIncompleteTasks(pageable);
+        if (tasks.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(tasks.getContent(), HttpStatus.OK);
+    }
+
     @GetMapping("/{id}")
     @Operation(summary = "Retorna uma tarefa específica pelo ID")
     public ResponseEntity<Task> getTaskById(@PathVariable Long id) {
