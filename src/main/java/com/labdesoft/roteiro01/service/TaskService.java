@@ -2,7 +2,6 @@ package com.labdesoft.roteiro01.service;
 
 import com.labdesoft.roteiro01.entity.Task;
 import com.labdesoft.roteiro01.repository.TaskRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -15,7 +14,7 @@ public class TaskService {
 
     private final TaskRepository taskRepository;
 
-    @Autowired
+
     public TaskService(TaskRepository taskRepository) {
         this.taskRepository = taskRepository;
     }

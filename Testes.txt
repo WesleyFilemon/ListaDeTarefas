@@ -28,3 +28,9 @@
         "daysToComplete": null,
         "priority": "MEDIA"
     }
+
+
+    /////Create////api/task
+    /////Update//api/task/1
+    ////Get//////api/task/3
+    ////Delete////api/task/7
