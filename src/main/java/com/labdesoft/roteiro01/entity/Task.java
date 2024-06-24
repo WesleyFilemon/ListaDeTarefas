@@ -75,7 +75,7 @@ public class Task {
                     if (expectedCompletionDate.isAfter(now)) {
                         this.status = "Prevista";
                     } else {
-                        this.status = ChronoUnit.DAYS.between(expectedCompletionDate, now) + " dias de atraso";
+                        this.status = ChronoUnit.DAYS.between(expectedCompletionDate, now) + " Para entrega";
                     }
                 }
                 break;

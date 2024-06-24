@@ -18,6 +18,7 @@ import java.util.Optional;
 @RestController
 @RequestMapping("/task")
 @Validated
+@CrossOrigin
 public class TaskController {
 
     @Autowired

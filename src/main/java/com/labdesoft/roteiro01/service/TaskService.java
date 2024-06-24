@@ -59,17 +59,19 @@ public class TaskService {
             if (task.getDueDate() == null) {
                 throw new IllegalArgumentException("Data prevista de execução deve ser fornecida para tarefas do tipo DATA.");
             }
+
+            /////requisito para dias de atraso
             if (task.getDueDate().isBefore(LocalDate.now())) {
                 throw new IllegalArgumentException("Data prevista de execução deve ser igual ou superior a data atual.");
             }
         } else {
-            task.setDueDate(null); // Clear dueDate for non-DATA tasks
+            task.setDueDate(null); 
         }
         if (task.getTaskType() == Task.TaskType.PRAZO && task.getDaysToComplete() == null) {
             throw new IllegalArgumentException("Prazo de conclusão deve ser fornecido para tarefas do tipo PRAZO.");
         }
         if (task.getPriority() == null) {
-            task.setPriority(Task.Priority.MEDIA); // Set default priority
+            task.setPriority(Task.Priority.MEDIA); 
         }
     }
 }
